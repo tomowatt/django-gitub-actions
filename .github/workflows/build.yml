@@ -11,5 +11,8 @@ jobs:
 
     steps:
       - name: Build Image
-        run: |
-          docker build . --tag $GITHUB_SHA
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: $GITHUB_SHA
