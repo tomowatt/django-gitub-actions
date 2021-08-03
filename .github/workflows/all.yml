@@ -22,7 +22,7 @@ jobs:
         pylint `ls -R|grep .py$|xargs`
 
   test:
-
+    needs: [lint]
     runs-on: ubuntu-latest
 
     services:
