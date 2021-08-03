@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
       - name: Build Image
         uses: docker/build-push-action@v2
         with:
