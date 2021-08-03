@@ -1,0 +1,67 @@
+name: All
+
+on: [push]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: github/super-linter@v4.5.1
+      name: Super-Linter
+      env:
+        VALIDATE_ALL_CODEBASE: true
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    needs: [lint]
+    runs-on: ubuntu-latest
+
+    services:
+      psql:
+        image: postgres:13.0-alpine
+        env:
+          POSTGRES_DB: test
+          POSTGRES_USER: django
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Show Migrations
+      run: |
+        cd app
+        ./manage.py showmigrations -v 3
+      env:
+         DB_NAME: test
+         DB_USER: django
+         DB_PASSWORD: password
+         DB_HOST: localhost
+         DB_PORT: 5432
+         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+    - name: Run Migrations
+      run: |
+        cd app
+        ./manage.py migrate
+      env:
+         DB_NAME: test
+         DB_USER: django
+         DB_PASSWORD: password
+         DB_HOST: localhost
+         DB_PORT: 5432
+         SECRET_KEY: ${{ secrets.SECRET_KEY }}
