@@ -15,4 +15,4 @@ jobs:
         with:
           context: .
           push: false
-          tags: $GITHUB_SHA
+          tags: test/test
