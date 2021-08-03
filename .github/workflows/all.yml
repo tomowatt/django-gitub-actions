@@ -32,7 +32,8 @@ jobs:
           POSTGRES_DB: test
           POSTGRES_USER: django
           POSTGRES_PASSWORD: password
-        ports: 5432:5432
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v2
