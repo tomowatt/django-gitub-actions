@@ -22,7 +22,6 @@ jobs:
 
   test:
     needs: [lint]
-    if: always()
     runs-on: ubuntu-latest
 
     services:
